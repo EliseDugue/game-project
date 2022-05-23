@@ -1,4 +1,7 @@
-#include "Game.h"
+#include "Headers/Game.h"
+
+SDL_Surface *playerSurface;
+GLuint playerTextureID;
 
 Game::Game()
 {
@@ -6,6 +9,38 @@ Game::Game()
 
 Game::~Game()
 {
+}
+
+unsigned int Game::getWindowWidth() {
+	return WINDOW_WIDTH;
+}
+
+unsigned int Game::getWindowHeight() {
+	return WINDOW_HEIGHT;
+}
+
+void Game::onWindowResized(unsigned int width, unsigned int height) {
+
+	/* Espace fenetre virtuelle */
+	static const float GL_VIEW_SIZE = 150.;
+
+	float aspectRatio = width / (float)height;
+
+	glViewport(0, 0, width, height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	if (aspectRatio > 1)
+	{
+		gluOrtho2D(
+			-GL_VIEW_SIZE / 2. * aspectRatio, GL_VIEW_SIZE / 2. * aspectRatio,
+			-GL_VIEW_SIZE / 2., GL_VIEW_SIZE / 2.);
+	}
+	else
+	{
+		gluOrtho2D(
+			-GL_VIEW_SIZE / 2., GL_VIEW_SIZE / 2.,
+			-GL_VIEW_SIZE / 2. / aspectRatio, GL_VIEW_SIZE / 2. / aspectRatio);
+	}
 }
 
 void Game::init(const char* title, int xPos, int yPos, int width, int height, bool fullscreen){
@@ -66,6 +101,25 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 		std::cout << "Erreur lors de la creation du contexte OpenGL : " << error << std::endl;
 	}
 
+	onWindowResized(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+	// TEXTURES //
+
+	playerSurface = IMG_Load("./Assets/player.png");
+
+	if (playerSurface == NULL) {
+		printf("\nimage non chargee\n");
+	}
+	else {
+		printf("\nimage chargee\n");
+	}
+
+	glGenTextures(1, &playerTextureID);
+	glBindTexture(GL_TEXTURE_2D, playerTextureID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, playerSurface->w, playerSurface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, playerSurface->pixels);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 }
 
 void Game::handleEvents() {
@@ -112,15 +166,30 @@ void Game::render() {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	glBegin(GL_LINES);
+	// TEXTURES //
 
-		glColor3f(1., 0., 0.);
-		glVertex2f(0.0, 0.0);
-		glVertex2f(1.0, 0.0);
+	// pour la transparence
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //
 
-		glColor3f(0., 1., 0.);
-		glVertex2f(0.0, 0.0);
-		glVertex2f(0.0, 1.0);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, playerTextureID);
+
+	glBegin(GL_QUADS);
+
+	int unit = 20;
+
+		glTexCoord2f(0, 1);
+		glVertex2f(-unit, -unit);
+
+		glTexCoord2f(1, 1);
+		glVertex2f(unit, -unit);
+
+		glTexCoord2f(1, 0);
+		glVertex2f(unit, unit);
+
+		glTexCoord2f(0, 0);
+		glVertex2f(-unit, unit);
 
 	glEnd();
 
@@ -129,6 +198,16 @@ void Game::render() {
 }
 
 void Game::clean() {
+
+	// TEXTURES //
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_TEXTURE_2D);
+
+	SDL_FreeSurface(playerSurface);
+	glDeleteTextures(1, &playerTextureID);
+	std::cout << "Textures effacees." << std::endl;
+
 	/* Liberation des ressources associees a la SDL */
 	SDL_GL_DeleteContext(context);
 	SDL_DestroyWindow(window);
