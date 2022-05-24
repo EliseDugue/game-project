@@ -1,8 +1,11 @@
 #include "Headers/Game.h"
 #include "Headers/TextureManager.h"
+#include "Headers/GameObject.h"
 
-TextureManager *playerSprite = new TextureManager;
-GLuint id_list_player;
+//TextureManager *playerSprite = new TextureManager;
+//GLuint id_list_player;
+
+GameObject *player;
 
 Game::Game()
 {
@@ -104,8 +107,11 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 
 	onWindowResized(WINDOW_WIDTH, WINDOW_HEIGHT);
 
+	player = new GameObject("./Assets/player.png");
+
+/*
 	playerSprite->loadTexture("player", playerSprite->getSurface());
-	playerSprite->renderTextureIDList();
+	playerSprite->renderTextureIDList();*/
 }
 
 void Game::handleEvents() {
@@ -153,19 +159,20 @@ void Game::handleEvents() {
 
 void Game::update() {
 	std::cout << count++ << std::endl;
+	player->update();
 }
 
 void Game::render() {
 
-	playerSprite->applyTextureFromList();
-
+	//playerSprite->applyTextureFromList();
+	player->render();
 	/* Echange du front et du back buffer : mise a jour de la fenetre */
 	SDL_GL_SwapWindow(window);
 }
 
 void Game::clean() {
 
-	delete playerSprite;
+	delete player;
 
 	/* Liberation des ressources associees a la SDL */
 	SDL_GL_DeleteContext(context);

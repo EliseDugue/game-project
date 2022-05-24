@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Headers/Game.h"
+#include <functional>
 
 class TextureManager
 {
@@ -14,14 +15,12 @@ public:
 	void setSurface(const char* new_filename);
 
 	GLuint getTextureID();
-	//void setTextureID(GLuint new_textureID);
 
 	const char* getFilename();
 	void setFilename(const char* new_filename);
 
 	GLuint loadTexture(const char* filename, SDL_Surface *surface);
-	//GLuint loadTextureObject(TextureManager texture);
-	GLuint renderTextureIDList();
+	GLuint renderTextureIDList(std::function<void()> drawing);
 	void applyTextureFromList();
 	void cleanTexture(SDL_Surface *surface, GLuint textureID);
 
