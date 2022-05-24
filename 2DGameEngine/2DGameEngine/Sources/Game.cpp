@@ -1,8 +1,8 @@
 #include "Headers/Game.h"
 #include "Headers/TextureManager.h"
 
-//TODO////////////////////////////////////////////
 TextureManager *playerSprite = new TextureManager;
+GLuint id_list_player;
 
 Game::Game()
 {
@@ -104,7 +104,8 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 
 	onWindowResized(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-
+	playerSprite->loadTexture("player", playerSprite->getSurface());
+	playerSprite->renderTextureIDList();
 }
 
 void Game::handleEvents() {
@@ -155,37 +156,8 @@ void Game::update() {
 }
 
 void Game::render() {
-	
-	glClear(GL_COLOR_BUFFER_BIT);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 
-	// TEXTURES //
-
-	// pour la transparence
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //
-
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, playerTextureID);
-
-	glBegin(GL_QUADS);
-
-	int unit = 20;
-
-		glTexCoord2f(0, 1);
-		glVertex2f(-unit, -unit);
-
-		glTexCoord2f(1, 1);
-		glVertex2f(unit, -unit);
-
-		glTexCoord2f(1, 0);
-		glVertex2f(unit, unit);
-
-		glTexCoord2f(0, 0);
-		glVertex2f(-unit, unit);
-
-	glEnd();
+	playerSprite->applyTextureFromList();
 
 	/* Echange du front et du back buffer : mise a jour de la fenetre */
 	SDL_GL_SwapWindow(window);
@@ -193,7 +165,7 @@ void Game::render() {
 
 void Game::clean() {
 
-	TextureManager::cleanTexture();
+	delete playerSprite;
 
 	/* Liberation des ressources associees a la SDL */
 	SDL_GL_DeleteContext(context);

@@ -10,6 +10,7 @@ TextureManager::TextureManager()
 
 TextureManager::~TextureManager()
 {
+	TextureManager::cleanTexture(surface,textureID);
 }
 
 SDL_Surface* TextureManager::getSurface() {
@@ -18,8 +19,8 @@ SDL_Surface* TextureManager::getSurface() {
 
 void TextureManager::setSurface(const char* new_filename) {
 
-	surface = IMG_Load(("./Assets/%filename.png", new_filename));
-
+	//surface = IMG_Load(("./Assets/%filename.png", new_filename));
+	surface = IMG_Load("./Assets/player.png");
 	if (surface == NULL) {
 		printf("\nimage non chargee\n");
 	}
@@ -32,9 +33,11 @@ GLuint TextureManager::getTextureID() {
 	return textureID;
 }
 
+/*
 void TextureManager::setTextureID(GLuint new_textureID) {
 	textureID = new_textureID;
 }
+*/
 
 const char* TextureManager::getFilename() {
 	return filename;
@@ -44,15 +47,25 @@ void TextureManager::setFilename(const char* new_filename) {
 	filename = new_filename;
 }
 
-GLuint TextureManager::loadTexture(const char* filename, SDL_Surface *surface, GLuint textureID) {
+GLuint TextureManager::loadTexture(const char* filename, SDL_Surface *surface) {
 
-	TextureManager::setSurface(filename);
-
+	setSurface(filename);
+	surface = getSurface();
+	//this->setSurface(filename);
+	GLuint textureID;
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	return textureID;
 }
 
 /*static GLuint loadTextureObject(TextureManager texture) {
@@ -75,15 +88,21 @@ GLuint TextureManager::loadTexture(const char* filename, SDL_Surface *surface, G
 void myDrawing() {
 
 	// code de dessin //
-	
-	glBegin(GL_TRIANGLE_FAN);
-	glVertex2f(0.0, 0.0);
 
-		glVertex2f(0.5, -0.5);
-		glVertex2f(0.5, 0.5);
-		glVertex2f(-0.5, 0.5);
-		glVertex2f(-0.5, -0.5);
-		glVertex2f(0.5, -0.5);
+	glBegin(GL_QUADS);
+	//glColor3f(1, 1, 1);
+
+	glTexCoord2f(0, 1);
+	glVertex2f(-40, -40);
+
+	glTexCoord2f(1, 1);
+	glVertex2f(40, -40);
+
+	glTexCoord2f(1, 0);
+	glVertex2f(40, 40);
+
+	glTexCoord2f(0, 0);
+	glVertex2f(-40, 40);
 
 	glEnd();
 }
@@ -99,10 +118,13 @@ GLuint TextureManager::renderTextureIDList() {
 		myDrawing();
 	glEndList();
 
+	id_list = id;
+
 	return id;
 }
 
-void TextureManager::applyTextureFromList(GLuint id_list) {
+void TextureManager::applyTextureFromList() {
+
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -117,5 +139,5 @@ void TextureManager::cleanTexture(SDL_Surface *surface, GLuint textureID) {
 
 	SDL_FreeSurface(surface);
 	glDeleteTextures(1, &textureID);
-	std::cout << "Textures effacees." << std::endl;
+	std::cout << "Texture effacee." << std::endl;
 }
