@@ -148,6 +148,15 @@ void Game::handleEvents() {
 			/* Touche clavier */
 		case SDL_KEYDOWN:
 			std::cout << "touche pressee : code = " << e.key.keysym.sym << std::endl;
+			
+			switch (e.key.keysym.sym) {
+			case 100:
+
+				break;
+			default:
+				break;
+			}
+
 			break;
 
 		default:
