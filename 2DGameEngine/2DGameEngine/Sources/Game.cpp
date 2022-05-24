@@ -1,7 +1,8 @@
 #include "Headers/Game.h"
+#include "Headers/TextureManager.h"
 
-SDL_Surface *playerSurface;
-GLuint playerTextureID;
+//TODO////////////////////////////////////////////
+TextureManager *playerSprite = new TextureManager;
 
 Game::Game()
 {
@@ -103,22 +104,6 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 
 	onWindowResized(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	// TEXTURES //
-
-	playerSurface = IMG_Load("./Assets/player.png");
-
-	if (playerSurface == NULL) {
-		printf("\nimage non chargee\n");
-	}
-	else {
-		printf("\nimage chargee\n");
-	}
-
-	glGenTextures(1, &playerTextureID);
-	glBindTexture(GL_TEXTURE_2D, playerTextureID);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, playerSurface->w, playerSurface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, playerSurface->pixels);
-	glBindTexture(GL_TEXTURE_2D, 0);
 
 }
 
@@ -208,14 +193,7 @@ void Game::render() {
 
 void Game::clean() {
 
-	// TEXTURES //
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glDisable(GL_TEXTURE_2D);
-
-	SDL_FreeSurface(playerSurface);
-	glDeleteTextures(1, &playerTextureID);
-	std::cout << "Textures effacees." << std::endl;
+	TextureManager::cleanTexture();
 
 	/* Liberation des ressources associees a la SDL */
 	SDL_GL_DeleteContext(context);
