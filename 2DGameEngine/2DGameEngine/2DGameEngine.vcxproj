@@ -134,16 +134,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\Headers\Rectangle.h" />
     <ClInclude Include="Sources\Headers\GameObject.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Sources\Headers\Game.h" />
     <ClInclude Include="Sources\Headers\TextureManager.h" />
+    <ClInclude Include="Sources\Headers\TexGameObject.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Rectangle.cpp" />
     <ClCompile Include="Sources\GameObject.cpp" />
     <ClCompile Include="Sources\Game.cpp" />
     <ClCompile Include="Sources\main.cpp" />
     <ClCompile Include="Sources\TextureManager.cpp" />
+    <ClCompile Include="Sources\TexGameObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="2DGameEngine.aps" />

@@ -1,10 +1,9 @@
 #include "Headers/Game.h"
 #include "Headers/TextureManager.h"
 #include "Headers/GameObject.h"
+#include "Headers/TexGameObject.h"
 
-//TextureManager *playerSprite = new TextureManager;
-//GLuint id_list_player;
-
+//TexGameObject *player;
 GameObject *player;
 
 Game::Game()
@@ -56,15 +55,6 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 	if (fullscreen) {
 		flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN;
 	}
-	/*
-	if (SDL_Init(SDL_INIT_EVERYTHING >= 0)) {
-		std::cout << "Initialisation de la SDL..." << std::endl;
-	}
-	else {
-		isRunning = false;
-		const char* error = SDL_GetError();
-		std::cout << "Erreur lors de l'initialisation de la SDL : " << error << std::endl;
-	}*/
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -107,11 +97,9 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 
 	onWindowResized(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	player = new GameObject("./Assets/player.png");
+	player = new GameObject();
+	player->initRect(15, 5, 0, 1, 0);
 
-/*
-	playerSprite->loadTexture("player", playerSprite->getSurface());
-	playerSprite->renderTextureIDList();*/
 }
 
 void Game::handleEvents() {
@@ -121,7 +109,7 @@ void Game::handleEvents() {
 
 	/* L'utilisateur ferme la fenetre : */
 	if (e.type == SDL_KEYDOWN
-		&& (e.key.keysym.sym == SDLK_q || e.key.keysym.sym == SDLK_ESCAPE))
+		&& (e.key.keysym.sym == SDLK_ESCAPE)
 	{
 		isRunning = false;
 	}
@@ -142,8 +130,8 @@ void Game::handleEvents() {
 			std::cout << "touche pressee : code = " << e.key.keysym.sym << std::endl;
 			
 			switch (e.key.keysym.sym) {
-			case 100:
-
+			case SDLK_q:
+				player->goLeft();
 				break;
 			default:
 				break;
@@ -159,13 +147,14 @@ void Game::handleEvents() {
 
 void Game::update() {
 	std::cout << count++ << std::endl;
-	player->update();
+	//player->update();
 }
 
 void Game::render() {
 
-	//playerSprite->applyTextureFromList();
+	RectangleQuad *rectPlayer = player->getRect();
 	player->render();
+
 	/* Echange du front et du back buffer : mise a jour de la fenetre */
 	SDL_GL_SwapWindow(window);
 }

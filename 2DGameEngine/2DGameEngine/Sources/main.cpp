@@ -1,4 +1,5 @@
 #include "Headers/Game.h"
+#include "Headers/TexGameObject.h"
 
 Game *game = nullptr;
 

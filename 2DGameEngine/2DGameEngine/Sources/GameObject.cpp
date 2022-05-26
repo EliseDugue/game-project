@@ -1,49 +1,60 @@
 #include "Headers/Game.h"
 #include "Headers/TextureManager.h"
+#include "Headers/Rectangle.h"
 #include "Headers/GameObject.h"
 
-void myDrawing() { //TODO
-
-	// code de dessin //
-
-	glBegin(GL_QUADS);
-	glColor3f(1, 1, 1);
-
-	glTexCoord2f(0, 1);
-	glVertex2f(-40, -40);
-
-	glTexCoord2f(1, 1);
-	glVertex2f(40, -40);
-
-	glTexCoord2f(1, 0);
-	glVertex2f(40, 40);
-
-	glTexCoord2f(0, 0);
-	glVertex2f(-40, 40);
-
-	glEnd();
-}
-
-GameObject::GameObject(const char* texturesheet)
+GameObject::GameObject()
 {
-	//TextureManager *sprite = new TextureManager;
-	sprite->setFilename(texturesheet);
-	sprite->loadTexture(texturesheet, sprite->getSurface());
-	sprite->renderTextureIDList(myDrawing);
+	position.x = 0;
+	position.y = 0;
 }
 
 GameObject::~GameObject()
 {
 }
 
-void GameObject::update() {
-	//moving the object...
-
-	position.x = 0;
-	position.y = 0;
-
+void GameObject::initRect(double m_width, double m_height, double m_red, double m_green, double m_blue)
+{
+	rectangle = new RectangleQuad(m_width, m_height, m_red, m_green, m_blue);
 }
 
-void GameObject::render() {
-	sprite->applyTextureFromList();	
+RectangleQuad* GameObject::getRect()
+{
+	return rectangle;
+}
+
+void GameObject::setRectSize(double n_width, double n_height)
+{
+	rectangle->setWidth(n_width);
+	rectangle->setHeight(n_height);
+}
+
+void GameObject::setRectColor(double new_red, double new_green, double new_blue)
+{
+	rectangle->setRGBValues(new_red, new_green, new_blue);
+}
+
+void GameObject::goLeft()
+{
+	position.x--;
+}
+
+void GameObject::goRight()
+{
+	position.x++;
+}
+
+void GameObject::render(/*std::function<void(bool)> drawing*/) {
+
+	GLuint id = glGenLists(1);
+	glNewList(id, GL_COMPILE_AND_EXECUTE);
+
+	/* Code de dessin */
+	
+	rectangle->drawRect(true);
+
+	glEndList();
+
+	rectangle->setIdList(id);
+
 }
