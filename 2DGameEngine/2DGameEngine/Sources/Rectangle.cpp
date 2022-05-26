@@ -65,7 +65,7 @@ void RectangleQuad::drawRect(bool filled) {
 		glBegin(GL_LINE_STRIP);
 	}
 
-	glColor3f(red, green, blue);
+	//glColor3f(red, green, blue);
 
 	glVertex2f(x_coord, -y_coord);
 	glVertex2f(x_coord, y_coord);
@@ -81,7 +81,7 @@ GLuint RectangleQuad::getIdList() {
 }
 
 void RectangleQuad::setIdList(GLuint m_id) {
-	m_id = id_list;
+	id_list = m_id;
 }
 
 double RectangleQuad::getWidth()

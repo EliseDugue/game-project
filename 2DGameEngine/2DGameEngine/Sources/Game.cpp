@@ -5,6 +5,7 @@
 
 //TexGameObject *player;
 GameObject *player;
+GameObject *background;
 
 Game::Game()
 {
@@ -32,6 +33,7 @@ void Game::onWindowResized(unsigned int width, unsigned int height) {
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+
 	if (aspectRatio > 1)
 	{
 		gluOrtho2D(
@@ -100,6 +102,9 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 	player = new GameObject();
 	player->initRect(15, 5, 0, 1, 0);
 
+	background = new GameObject();
+	background->initRect(WINDOW_WIDTH, WINDOW_HEIGHT, 0, 1, 1);
+
 }
 
 void Game::handleEvents() {
@@ -108,9 +113,7 @@ void Game::handleEvents() {
 	SDL_PollEvent(&e);
 
 	/* L'utilisateur ferme la fenetre : */
-	if (e.type == SDL_KEYDOWN
-		&& (e.key.keysym.sym == SDLK_ESCAPE)
-	{
+	if ((e.type == SDL_KEYDOWN) && (e.key.keysym.sym == SDLK_ESCAPE)){
 		isRunning = false;
 	}
 
@@ -133,6 +136,8 @@ void Game::handleEvents() {
 			case SDLK_q:
 				player->goLeft();
 				break;
+			case SDLK_d:
+				player->goRight();
 			default:
 				break;
 			}
@@ -147,12 +152,14 @@ void Game::handleEvents() {
 
 void Game::update() {
 	std::cout << count++ << std::endl;
+
 	//player->update();
 }
 
 void Game::render() {
 
-	RectangleQuad *rectPlayer = player->getRect();
+	//RectangleQuad *rectPlayer = player->getRect();
+	background->render();
 	player->render();
 
 	/* Echange du front et du back buffer : mise a jour de la fenetre */
