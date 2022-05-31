@@ -1,6 +1,3 @@
-#include "Headers/Game.h"
-#include "Headers/TextureManager.h"
-#include "Headers/Rectangle.h"
 #include "Headers/GameObject.h"
 
 GameObject::GameObject()
@@ -49,28 +46,19 @@ void GameObject::setRectColor(double new_red, double new_green, double new_blue)
 
 void GameObject::goLeft()
 {
-	double size = rectangle->getWidth();
+	double size = 0.3*(rectangle->getWidth());
 	position.x = position.x - size;
-	/*
-	glPushMatrix();
-		glTranslated(position.x, position.y, 0);
-		glColor3d(0, 0, 1);
-		glCallList(rectangle->getIdList());
-	glPopMatrix();
-	*/
 }
 
 void GameObject::goRight()
 {
-	double size = rectangle->getWidth();
+	double size = 0.3*(rectangle->getWidth());
 	position.x = position.x + size;
-	/*
-	glPushMatrix();
-		glTranslated(position.x, position.y, 0);
-		glColor3d(1,0,0);
-		glCallList(rectangle->getIdList());
-	glPopMatrix();
-	*/
+}
+
+void GameObject::translate(double x, double y) {
+	position.x = x;
+	position.y = y;
 }
 
 void GameObject::render() {
@@ -82,3 +70,65 @@ void GameObject::render() {
 	glPopMatrix();
 
 }
+
+Position GameObject::getPosition()
+{
+	return position;
+}
+
+
+int GameObject::checkCollisionX(GameObject *b)
+// AABB - AABB collision
+{
+	Position pos_a = this->getPosition();
+	RectangleQuad *rect_a = this->getRect();
+	int x_size_a = rect_a->getWidth();
+
+	Position pos_b = b->getPosition();
+	RectangleQuad *rect_b = b->getRect();
+	int x_size_b = rect_b->getWidth();
+
+	// collision x-axis?
+	bool collisionX = pos_a.x + x_size_a >= pos_b.x &&
+		pos_b.x + x_size_b >= pos_a.x;
+
+	if (collisionX) {
+		std::cout << "collision axe X" << std::endl;
+		if (pos_a.x > pos_b.x) {
+			//std::cout << "collision bord droit, bloquer mouvement gauche" << std::endl;
+			return 1;
+		}
+		else if (pos_a.x < pos_b.x) {
+			//std::cout << "collision bord gauche, bloquer mouvement droite" << std::endl;
+			return 2;
+		}
+	}
+	else {
+		return 0;
+	}
+}
+
+/*
+bool GameObject::checkCollisionY(GameObject *b)
+// AABB - AABB collision
+{
+	Position pos_a = this->getPosition();
+	RectangleQuad *rect_a = this->getRect();
+	int y_size_a = rect_a->getHeight();
+
+	Position pos_b = b->getPosition();
+	RectangleQuad *rect_b = b->getRect();
+	int y_size_b = rect_b->getHeight();
+
+	// collision y-axis?
+	bool collisionY = pos_a.y + y_size_a >= pos_b.y &&
+		pos_b.y + y_size_b >= pos_a.y;
+
+	if (collisionY) {
+		std::cout << "collision axe Y" << std::endl;
+	}
+
+	return collisionY;
+}*/
+
+

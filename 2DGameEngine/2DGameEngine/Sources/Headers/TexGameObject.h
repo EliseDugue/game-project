@@ -7,13 +7,11 @@
 class TexGameObject : public GameObject
 {
 public:
-	TexGameObject(const char* texturesheet);
+	TexGameObject(const char* texturesheet,int w, int h);
 	~TexGameObject();
 
-	//void init(const char* texturesheet);
+	GLuint renderTextureIDList();
 	void render();
-
-	//TextureManager* getSprite();
 	TextureManager *sprite = new TextureManager;
 };
 

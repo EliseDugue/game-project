@@ -1,5 +1,7 @@
 #include "Headers/Game.h"
 #include "Headers/TexGameObject.h"
+#pragma comment(lib, "Winmm.lib")
+#include <mmsystem.h>
 
 Game *game = nullptr;
 
@@ -16,6 +18,8 @@ int main(int argc, char** argv)
 	game = new Game();
 
 	game->init("Nom du jeu", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, game->getWindowWidth(), game->getWindowHeight(), false);
+
+	PlaySound(TEXT("./Assets/Obstacle_Course.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
 	while (game->running())
 	{

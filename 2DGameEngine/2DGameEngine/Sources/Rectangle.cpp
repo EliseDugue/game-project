@@ -1,5 +1,5 @@
 #include "Headers/Rectangle.h"
-#include "Headers/Game.h"
+//#include "Headers/Game.h"
 
 RectangleQuad::RectangleQuad(double m_width, double m_height, double m_red, double m_green, double m_blue)
 {
@@ -14,16 +14,6 @@ RectangleQuad::RectangleQuad(double m_width, double m_height, double m_red, doub
 RectangleQuad::~RectangleQuad()
 {
 }
-
-/*void RectangleQuad::initRect(double m_width, double m_height, double m_red, double m_green, double m_blue)
-{
-	width = m_width;
-	height = m_height;
-
-	red = m_red;
-	green = m_green;
-	blue = m_blue;
-}*/
 
 void RectangleQuad::drawSquare(bool filled){
 
@@ -64,8 +54,6 @@ void RectangleQuad::drawRect(bool filled) {
 	{
 		glBegin(GL_LINE_STRIP);
 	}
-
-	//glColor3f(red, green, blue);
 
 	glVertex2f(x_coord, -y_coord);
 	glVertex2f(x_coord, y_coord);

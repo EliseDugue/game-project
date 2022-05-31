@@ -63,5 +63,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\player.png" />
+    <Image Include="Assets\sky.jpg" />
   </ItemGroup>
 </Project>

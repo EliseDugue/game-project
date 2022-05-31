@@ -33,6 +33,16 @@ GLuint TextureManager::getTextureID() {
 	return textureID;
 }
 
+GLuint TextureManager::getIDList()
+{
+	return id_list;
+}
+
+void TextureManager::setIDList(GLuint id)
+{
+	id_list = id;
+}
+
 /*
 void TextureManager::setTextureID(GLuint new_textureID) {
 	textureID = new_textureID;
@@ -56,7 +66,7 @@ GLuint TextureManager::loadTexture(const char* filename, SDL_Surface *surface) {
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGB, GL_UNSIGNED_BYTE, surface->pixels);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glEnable(GL_BLEND);
@@ -68,14 +78,14 @@ GLuint TextureManager::loadTexture(const char* filename, SDL_Surface *surface) {
 	return textureID;
 }
 
-GLuint TextureManager::renderTextureIDList(std::function<void()> drawing) {
+/*GLuint TextureManager::renderTextureIDList(std::function<void()> drawing) {
 
 	GLuint id = glGenLists(1); // 1 pour generer une liste
 		// GL_COMPILE permet d’envoyer la liste de commandes au GPU
 		// sans l’exécuter (contrairement à GL_COMPILE_AND_EXECUTE)
 
 	glNewList(id, GL_COMPILE);
-	/* Code de dessin */
+	// Code de dessin 
 		drawing();
 
 		/*glBegin(GL_QUADS);
@@ -93,14 +103,14 @@ GLuint TextureManager::renderTextureIDList(std::function<void()> drawing) {
 		glTexCoord2f(0, 0);
 		glVertex2f(-40, 40);
 
-		glEnd();*/
+		glEnd();
 
 	glEndList();
 
 	id_list = id;
 
 	return id;
-}
+}*/
 
 void TextureManager::applyTextureFromList() {
 

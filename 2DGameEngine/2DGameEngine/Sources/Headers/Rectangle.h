@@ -36,8 +36,6 @@ private:
 	double green;
 	double blue;
 
-	//double anchor_point[2] = { width / 2 , height / 2 };
-
 	GLuint id_list;
 
 };

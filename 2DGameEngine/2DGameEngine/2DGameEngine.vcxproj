@@ -162,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\player.png" />
+    <Image Include="Assets\sky.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

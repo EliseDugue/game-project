@@ -2,10 +2,12 @@
 #include "Headers/TextureManager.h"
 #include "Headers/GameObject.h"
 #include "Headers/TexGameObject.h"
+#include "Headers/Rectangle.h"
 
-//TexGameObject *player;
 GameObject *player;
-GameObject *background;
+TexGameObject *background;
+GameObject *platform1;
+GameObject *platform2;
 
 Game::Game()
 {
@@ -26,7 +28,8 @@ unsigned int Game::getWindowHeight() {
 void Game::onWindowResized(unsigned int width, unsigned int height) {
 
 	/* Espace fenetre virtuelle */
-	static const float GL_VIEW_SIZE = 150.;
+	static const float GL_VIEW_SIZE = 200.;
+	//static const float GL_VIEW_SIZE = 20000.;
 
 	float aspectRatio = width / (float)height;
 
@@ -102,8 +105,15 @@ void Game::init(const char* title, int xPos, int yPos, int width, int height, bo
 	player = new GameObject();
 	player->initRect(15, 5, 0, 1, 0);
 
-	background = new GameObject();
-	background->initRect(WINDOW_WIDTH, WINDOW_HEIGHT, 0, 1, 1);
+	background = new TexGameObject("./Assets/sky.jpg", 400, 400);
+
+	platform1 = new GameObject();
+	platform1->initRect(10, 100, 0.4, 0.2, 0);
+	platform1->translate(50, -7.5);
+
+	platform2 = new GameObject();
+	platform2->initRect(10, 100, 0.4, 0.2, 0);
+	platform2->translate(-50, -7.5);
 
 }
 
@@ -116,6 +126,9 @@ void Game::handleEvents() {
 	if ((e.type == SDL_KEYDOWN) && (e.key.keysym.sym == SDLK_ESCAPE)){
 		isRunning = false;
 	}
+
+	int dir_collision_plat1 = 0;
+	int dir_collision_plat2 = 0;
 
 	switch (e.type) {
 
@@ -134,10 +147,45 @@ void Game::handleEvents() {
 			
 			switch (e.key.keysym.sym) {
 			case SDLK_q:
-				player->goLeft();
-				break;
+				dir_collision_plat1 = player->checkCollisionX(platform1);
+				dir_collision_plat2 = player->checkCollisionX(platform2);
+				if (dir_collision_plat1 != 0 || dir_collision_plat2 != 0) {
+					if (dir_collision_plat1 == 1 || dir_collision_plat2 == 1) {
+						std::cout << "je ne peux pas aller a gauche" << std::endl;
+						break;
+					}
+					else {
+						player->goLeft();
+						std::cout << "je vais a gauche" << std::endl;
+						break;
+					}
+				}
+				else {
+					player->goLeft();
+					std::cout << "je vais a gauche" << std::endl;
+					break;
+				}
+				
 			case SDLK_d:
-				player->goRight();
+				dir_collision_plat1 = player->checkCollisionX(platform1);
+				dir_collision_plat2 = player->checkCollisionX(platform2);
+				if (dir_collision_plat1 != 0 || dir_collision_plat2 != 0) {
+					if (dir_collision_plat1 == 2 || dir_collision_plat2 == 2) {
+						std::cout << "je ne peux pas aller a droite" << std::endl;
+						break;
+					}
+					else {
+						player->goRight();
+						std::cout << "je vais a droite" << std::endl;
+						break;
+					}
+
+				}
+				else {
+					player->goRight();
+					std::cout << "je vais a droite" << std::endl;
+					break;
+				}
 			default:
 				break;
 			}
@@ -151,16 +199,18 @@ void Game::handleEvents() {
 }
 
 void Game::update() {
-	std::cout << count++ << std::endl;
+	//std::cout << count++ << std::endl;
 
 	//player->update();
 }
 
 void Game::render() {
 
-	//RectangleQuad *rectPlayer = player->getRect();
 	background->render();
+	platform1->render();
+	platform2->render();
 	player->render();
+	
 
 	/* Echange du front et du back buffer : mise a jour de la fenetre */
 	SDL_GL_SwapWindow(window);
@@ -169,6 +219,9 @@ void Game::render() {
 void Game::clean() {
 
 	delete player;
+	delete background;
+	delete platform1;
+	delete platform2;
 
 	/* Liberation des ressources associees a la SDL */
 	SDL_GL_DeleteContext(context);

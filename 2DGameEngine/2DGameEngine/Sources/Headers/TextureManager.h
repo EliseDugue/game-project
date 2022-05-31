@@ -15,12 +15,14 @@ public:
 	void setSurface(const char* new_filename);
 
 	GLuint getTextureID();
+	GLuint getIDList();
+	void setIDList(GLuint id);
 
 	const char* getFilename();
 	void setFilename(const char* new_filename);
 
 	GLuint loadTexture(const char* filename, SDL_Surface *surface);
-	GLuint renderTextureIDList(std::function<void()> drawing);
+	//GLuint renderTextureIDList(std::function<void()> drawing);
 	void applyTextureFromList();
 	void cleanTexture(SDL_Surface *surface, GLuint textureID);
 
